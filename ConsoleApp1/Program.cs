@@ -9,7 +9,7 @@ namespace ConsoleApp1
     {
         private static string gravaTitulo = "";
         private static int arquivoCriado = 0;
-        private static int parte1Preenchida = 0;
+        private static char first;
 
         static void Main(string[] args)
         {
@@ -32,36 +32,37 @@ namespace ConsoleApp1
 
                 foreach (var linha in linhas)
                 {
-
                     char[] charArray = linha.ToCharArray();
 
-                    if (charArray.Length != 0)
+                    if (linha != "")
+                        first = charArray[0];
+
+
+                    if (first.ToString() != "%" && linha != "fim")
                     {
-                        char first = charArray[0];
-                        if (first.ToString() != "%" && linha != "fim")
+                        gravaTitulo = linha;
+                        criarPasta(caminho, linha);
+                    }
+                    else if (first.ToString() == "%" && linha != "")
+                    {
+                        if (arquivoCriado == 0)
                         {
-                            gravaTitulo = linha;
-                            criarPasta(caminho, linha);
+                            criarArquivo3GetSetInicial(gravaTitulo, caminho);
+                            criarArquivo3GetSetInsirindo(linha, gravaTitulo, caminho);
+                            arquivoCriado = 1;
                         }
-                        else if (first.ToString() == "%")
+                        else
                         {
-                            if (arquivoCriado == 0)
-                            {
-                                criarArquivo3GetSetInicial(gravaTitulo, caminho);
-                                criarArquivo3GetSetInsirindo(linha, gravaTitulo, caminho);
-                                arquivoCriado = 1;
-                            }
-                            else
-                            {
-                                criarArquivo3GetSetInsirindo(linha, gravaTitulo, caminho);
-                            }
-                        }
-                        else if (linha == "fim")
-                        {
-                            criarArquivo3GetSetFinal(gravaTitulo, caminho);
+                            criarArquivo3GetSetInsirindo(linha, gravaTitulo, caminho);
                         }
                     }
+                    else if (linha == "fim" || linha == "")
+                    {
+                        criarArquivo3GetSetFinal(gravaTitulo, caminho);
+                        arquivoCriado = 0;  
+                    }
                 }
+                Console.WriteLine("Fim!");
                 Console.ReadKey();
             }
             catch (Exception ex)
@@ -77,7 +78,7 @@ namespace ConsoleApp1
             if (!Directory.Exists(caminhoFinal))
             {
                 Directory.CreateDirectory(caminhoFinal);
-                Console.WriteLine(caminhoFinal);
+                Console.WriteLine("Criado a pasta " + titulo);
             }
 
             criarArquivo(caminhoFinal, titulo);
@@ -122,7 +123,7 @@ namespace ConsoleApp1
             string arquivo3 = "TransitionCommandResult.cs";
             string arquivoCriado3 = Path.Combine(caminho + "\\" + gravaTitulo + "\\" + gravaTitulo + arquivo3);
 
-            preencherDadosArquivo3Final(arquivoCriado3);
+            preencherDadosArquivo3Final(arquivoCriado3, gravaTitulo);
         }
 
         private static string formataVariavel(string titulo)
@@ -152,7 +153,7 @@ namespace ConsoleApp1
             }
             finally
             {
-                Console.WriteLine("Arquivos " + titulo + "TransitionCommand criado");
+                Console.WriteLine("Criado arquivo " + titulo + "TransitionCommand");
             }
         }
         private static void preencherArquivoServicos(string arquivo, string titulo)
@@ -195,7 +196,7 @@ namespace ConsoleApp1
             }
             finally
             {
-                Console.WriteLine("Arquivos " + titulo + "TransitionCommandHandler criado");
+                Console.WriteLine("Criado arquivo " + titulo + "TransitionCommandHandler");
             }
         }
 
@@ -206,17 +207,13 @@ namespace ConsoleApp1
                 StreamWriter valor = new StreamWriter(arquivo, true);
                 valor.WriteLine("namespace Mutant.Galileo.Domain.Application.Commands.States." + titulo);
                 valor.WriteLine("{");
-                valor.WriteLine("    public class ModeloTransitionCommandResult");
+                valor.WriteLine("    public class " + titulo + "TransitionCommandResult");
                 valor.WriteLine("    {");
                 valor.Close();
             }
             catch (Exception)
             {
                 throw;
-            }
-            finally
-            {
-                Console.WriteLine("Arquivos 3 criado e preenchido");
             }
         }
 
@@ -232,13 +229,9 @@ namespace ConsoleApp1
             {
                 throw;
             }
-            finally
-            {
-                Console.WriteLine("Arquivos 3 criado e preenchido");
-            }
         }
 
-        private static void preencherDadosArquivo3Final(string arquivoCriado3)
+        private static void preencherDadosArquivo3Final(string arquivoCriado3, string titulo)
         {
             try
             {
@@ -253,7 +246,7 @@ namespace ConsoleApp1
             }
             finally
             {
-                Console.WriteLine("Arquivos 3 criado e preenchido");
+                Console.WriteLine("Criado arquivo " + formataVariavel(titulo) + "TransitionCommandResult");
             }
         }
     }
