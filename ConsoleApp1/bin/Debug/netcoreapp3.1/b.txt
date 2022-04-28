@@ -1,0 +1,15 @@
+teste
+teste 123
+
+este teste testado
+...
+
+Titulo
+%variavel1
+%variavel2
+%variavel3
+%variavel4
+
+....
+
+fim do teste
