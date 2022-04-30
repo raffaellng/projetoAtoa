@@ -56,7 +56,7 @@ namespace ConsoleApp1
                             criarArquivo3GetSetInsirindo(linha, gravaTitulo, caminho);
                         }
                     }
-                    else if (linha == "fim" || linha == "")
+                    else if (linha == "")
                     {
                         criarArquivo3GetSetFinal(gravaTitulo, caminho);
                         arquivoCriado = 0;  
@@ -114,8 +114,26 @@ namespace ConsoleApp1
             string arquivo3 = "TransitionCommandResult.cs";
             string arquivoCriado3 = Path.Combine(caminho + "\\" + gravaTitulo + "\\" + gravaTitulo + arquivo3);
 
-            string novoTitulo = formataVariavel(variavel);
-            preencherDadosArquivo3Parte2(arquivoCriado3, novoTitulo);
+            string novaVariavel = formataVariavel(variavel);
+
+            if(VerificaExisteVariavel(arquivoCriado3, novaVariavel) == false)
+                preencherDadosArquivo3Parte2(arquivoCriado3, novaVariavel);
+        }
+
+        private static bool VerificaExisteVariavel(string arquivoCriado, string novaVariavel)
+        {
+            bool existeVariavel = false;
+            string[] linhas = File.ReadAllLines(arquivoCriado);
+
+            foreach (var linha in linhas)
+            {
+                if (linha == "        public bool "+ novaVariavel + " { get; set; }")
+                {
+                    existeVariavel = true;
+                }
+            }
+
+            return existeVariavel;
         }
 
         private static void criarArquivo3GetSetFinal(string gravaTitulo, string caminho)
